@@ -13,7 +13,7 @@ This repository demonstrates advanced system design, automated AI compliance pip
 | 🎯 Functional Payroll Engine | React + Recharts | [Open Interactive Sandbox](https://claude.ai/public/artifacts/97496e38-412e-4d77-bf99-1d80da0c133e) |
 | 📊 Operations Command Center | Looker Studio | [Open Live Dashboard](https://datastudio.google.com/reporting/d6774274-3f24-4161-9839-1fa755a2fed4/page/LdXyF) |
 | 🌐 Master Architecture Hub | Notion | [Open Global Operations Hub](https://app.notion.com/p/Global-Workforce-Operations-Hub-37049d700566802aa893f03a096a4687) |
-| 💻 Deployed Codebase | Netlify + GitHub | [Open Live Project Site](https://payroll-exception-management.netlify.app/) |
+| 💻 Deployed Codebase | Netlify + GitHub | [Open Live Project Site](https://global-workforce-operations-hub.netlify.app/) |
 
 ---
 
