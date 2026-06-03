@@ -86,7 +86,9 @@ Unlike isolated portfolio pieces, this repository connects an **Employee-Facing 
 ```text
 payroll-exception-management/
 ├── index.html                           # Main web entry application
-├── dashboard.jsx                        # React analytics engine and visual logic
+├── dashboard.jsx                        # React analytics engine for exception management (Project 1)
+├── payroll-simulator.jsx                # Core state engine for cross-border salary simulator (Project 2)
+├── simulator.jsx                        # React rendering logic for interactive client sandbox
 ├── payroll_exceptions_data.xlsx         # Consolidated EOR database and historical records
 ├── payroll_exceptions_raw.csv           # Unstructured incoming employee ticket simulation
 ├── AI_Classified_Ticket_TK1092.pdf      # Proof-of-concept automated ticket triage artifact
