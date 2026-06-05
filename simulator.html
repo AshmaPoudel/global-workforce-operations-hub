@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Payroll & Expense Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B5E9E;--navy-dark:#0D2B4E;--navy-light:#E6F1FB;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --amber:#BA7517;--amber-light:#FAEEDA;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --green:#3B6D11;--green-light:#EAF3DE;
+  --purple:#534AB7;--purple-light:#EEEDFE;
+  --ink:#1A1A18;--muted:#5F5E5A;--faint:#B4B2A9;
+  --bg:#F7F6F2;--white:#FFFFFF;--border:#D3D1C7;--border2:#E8E6DE;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+/* STORY BANNER */
+.story-banner{background:linear-gradient(135deg,var(--navy-dark),var(--navy));padding:0}
+.story-acts{display:flex;overflow-x:auto;scrollbar-width:none}
+.story-acts::-webkit-scrollbar{display:none}
+.act{flex:1;min-width:200px;padding:14px 18px;border-right:0.5px solid rgba(255,255,255,0.1);cursor:pointer;transition:background 0.15s;position:relative}
+.act:last-child{border-right:none}
+.act:hover{background:rgba(255,255,255,0.05)}
+.act.current{background:rgba(255,255,255,0.1)}
+.act-num{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:4px}
+.act-title{font-size:12px;font-weight:500;color:#fff;margin-bottom:3px}
+.act-sub{font-size:10px;color:rgba(255,255,255,0.5);line-height:1.4}
+.act-arrow{position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:12px;height:12px;background:var(--navy-dark);border:0.5px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,0.4)}
+
+/* HEADER */
+.header{background:var(--navy-dark);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid rgba(255,255,255,0.1)}
+.header-title{color:#fff;font-size:14px;font-weight:500}
+.header-sub{color:rgba(255,255,255,0.5);font-size:11px;margin-top:1px}
+.header-badge{font-size:10px;background:rgba(255,255,255,0.12);color:#B5D4F4;padding:4px 10px;border-radius:12px;font-weight:500}
+
+/* NAV */
+.nav{display:flex;border-bottom:1px solid var(--border);background:var(--white);overflow-x:auto;scrollbar-width:none;padding:0 16px}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:10px 14px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
+.nav-btn.active{color:var(--navy);border-bottom-color:var(--navy)}
+.nav-btn:hover{color:var(--ink)}
+
+.tab{display:none;padding:1.25rem 1rem;animation:fadeIn 0.2s ease}
+.tab.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.grid4{grid-template-columns:1fr 1fr}}
+
+.card{background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.stitle{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.09em;color:var(--faint);margin-bottom:10px}
+.metric{background:var(--bg);border-radius:8px;padding:12px 14px;text-align:center}
+.metric .n{font-size:20px;font-weight:500;display:block;line-height:1;margin-bottom:3px;font-variant-numeric:tabular-nums;font-family:'DM Mono',monospace}
+.metric .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em}
+.n-blue{color:var(--navy)}.n-green{color:var(--green)}.n-red{color:var(--red)}.n-amber{color:var(--amber)}
+
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+input,select{width:100%;font-size:13px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:8px;background:var(--white);color:var(--ink);outline:none;font-family:'DM Sans',sans-serif}
+input:focus,select:focus{border-color:var(--navy)}
+.field{margin-bottom:10px}
+.sym-wrap{position:relative}
+.sym-wrap .sym{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted);pointer-events:none;font-family:'DM Mono',monospace}
+.sym-wrap input{padding-left:26px}
+.salary-hint{font-size:10px;color:var(--navy);margin-top:4px;font-style:italic}
+
+.ps-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border2);font-size:13px}
+.ps-row:last-child{border-bottom:none}
+.ps-row.subtotal{font-weight:500;border-top:1px solid var(--border);border-bottom:0.5px solid var(--border2);padding-top:10px;margin-top:2px}
+.ps-row.ded{color:var(--red)}
+.ps-row.net{color:var(--green);font-size:15px;font-weight:500;border-top:1px solid var(--border);border-bottom:none;padding-top:10px;margin-top:4px}
+.divider{height:0.5px;background:var(--border2);margin:10px 0}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.b-blue{background:var(--navy-light);color:#0C447C}
+.b-green{background:var(--green-light);color:var(--green)}
+.b-amber{background:var(--amber-light);color:var(--amber)}
+.b-red{background:var(--red-light);color:var(--red)}
+
+.exp-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:8px;margin-bottom:6px;font-size:12px}
+.exp-desc{flex:1;color:var(--ink)}
+.exp-amt{font-variant-numeric:tabular-nums;font-weight:500;font-family:'DM Mono',monospace}
+.del-btn{color:var(--red);cursor:pointer;background:none;border:none;font-size:18px;padding:0 4px;line-height:1}
+.act-btn{width:100%;padding:9px;border:0.5px solid var(--border2);border-radius:8px;background:var(--white);color:var(--ink);cursor:pointer;font-size:12px;font-weight:500;transition:all 0.12s;font-family:'DM Sans',sans-serif}
+.act-btn:hover{background:var(--bg)}
+
+.bar-wrap{margin-bottom:8px}
+.bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px}
+.bar-track{height:8px;background:var(--border2);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.4s ease}
+
+.reimb-item{border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;background:var(--white)}
+.alert{padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:10px;border:0.5px solid;line-height:1.5}
+.alert-red{background:var(--red-light);border-color:#F7C1C1;color:var(--red)}
+.alert-green{background:var(--green-light);border-color:#C0DD97;color:var(--green)}
+.alert-purple{background:var(--purple-light);border-color:#AFA9EC;color:var(--purple)}
+.info-box{padding:10px 12px;background:var(--bg);border-radius:8px;font-size:11px;color:var(--muted);line-height:1.6;margin-top:8px}
+
+.eor-note{padding:12px 14px;background:var(--purple-light);border:0.5px solid #AFA9EC;border-radius:10px;margin-bottom:14px}
+.eor-title{font-size:12px;font-weight:500;color:#3C3489;margin-bottom:6px}
+.eor-body{font-size:11px;color:var(--purple);line-height:1.6}
+.eor-examples{margin-top:8px;padding-top:8px;border-top:0.5px solid #AFA9EC}
+.eor-ex{font-size:11px;color:#3C3489;margin-bottom:4px;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.eor-dot{width:5px;height:5px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:4px}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;display:inline-block}
+
+/* EXCEPTION BREACH PANEL */
+.breach-panel{background:var(--red-light);border:1px solid #F7C1C1;border-radius:12px;padding:16px;margin-bottom:12px;display:none}
+.breach-panel.visible{display:block;animation:fadeIn 0.3s ease}
+.breach-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.breach-icon{font-size:22px;animation:pulse 1.2s ease-in-out infinite}
+.breach-title{font-size:14px;font-weight:500;color:var(--red)}
+.breach-sub{font-size:11px;color:#A32D2D;margin-top:1px}
+.breach-tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.breach-metric{background:var(--white);border-radius:8px;padding:10px 12px;text-align:center;border:0.5px solid #F7C1C1}
+.breach-metric .bm-n{font-size:20px;font-weight:500;color:var(--red);font-family:'DM Mono',monospace;display:block;line-height:1;margin-bottom:2px}
+.breach-metric .bm-l{font-size:10px;color:#A32D2D;text-transform:uppercase;letter-spacing:0.06em}
+.breach-ticket-list{margin-bottom:12px}
+.breach-ticket{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--white);border-radius:6px;margin-bottom:5px;font-size:12px;border:0.5px solid #F7C1C1}
+.bt-id{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:60px;flex-shrink:0}
+.bt-desc{flex:1;color:var(--ink)}
+.bt-sla{font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:var(--red-light);color:var(--red);flex-shrink:0;border:0.5px solid #F7C1C1;animation:pulse 1.2s ease-in-out infinite}
+.view-dashboard-btn{width:100%;padding:10px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.view-dashboard-btn:hover{background:#8B1A1A}
+
+.country-banner{background:var(--navy-light);border:0.5px solid #B5D4F4;border-radius:8px;padding:8px 12px;font-size:11px;color:var(--navy);margin-bottom:10px;display:none}
+</style>
+</head>
+<body>
+
+<!-- THREE ACT STORY BANNER -->
+<div class="story-banner">
+  <div class="story-acts">
+    <div class="act current" id="act1">
+      <div class="act-num">Act I</div>
+      <div class="act-title">🎭 The Employee Frontend</div>
+      <div class="act-sub">Salary simulation, expense tracking, reimbursement submission</div>
+    </div>
+    <div class="act" id="act2">
+      <div class="act-num">Act II</div>
+      <div class="act-title">⚡ The Friction Point</div>
+      <div class="act-sub">Reimbursement breaches 14-day window — exception triggered</div>
+    </div>
+    <div class="act" id="act3">
+      <div class="act-num">Act III</div>
+      <div class="act-title">🖥️ The Resolution Core</div>
+      <div class="act-sub">AI routes ticket to operations dashboard for resolution</div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div>
+    <div class="header-title">Global Payroll & Expense Simulator</div>
+    <div class="header-sub">EOR employment · 10 countries · Live statutory deductions</div>
+  </div>
+  <span class="header-badge">EOR Employee</span>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('salary',this)">Salary setup</button>
+  <button class="nav-btn" onclick="showTab('payslip',this)">Payslip</button>
+  <button class="nav-btn" onclick="showTab('expenses',this)">Expenses</button>
+  <button class="nav-btn" onclick="showTab('reimbursements',this)" id="reimb-nav-btn">Reimbursements</button>
+  <button class="nav-btn" onclick="showTab('summary',this)">Monthly summary</button>
+</div>
+
+<!-- SALARY -->
+<div class="tab active" id="tab-salary">
+  <div class="eor-note">
+    <div class="eor-title">📌 Understanding EOR employment country</div>
+    <div class="eor-body">The country you select represents where your employment contract is officially registered — not necessarily where you are physically located. This is the core of how Employer of Record (EOR) works: your legal employer is registered in your employment country and handles local payroll, taxes, and labour law compliance on your behalf.</div>
+    <div class="eor-examples">
+      <div class="eor-ex"><span class="eor-dot"></span><span><strong>Digital nomad in Thailand, hired through a Thai EOR</strong> — select Thailand, enter salary in Thai Baht. Thai income tax and Social Security Fund apply.</span></div>
+      <div class="eor-ex"><span class="eor-dot"></span><span><strong>UK employee working remotely from Thailand</strong> — select United Kingdom, enter salary in GBP. UK income tax and National Insurance apply regardless of physical location.</span></div>
+      <div class="eor-ex"><span class="eor-dot"></span><span><strong>Nepalese national employed through a Nepali EOR, living abroad</strong> — select Nepal, enter salary in NPR. Nepali tax obligations apply regardless of country of residence.</span></div>
+    </div>
+  </div>
+  <div id="country-banner" class="country-banner"></div>
+  <div class="stitle">Your salary details</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="field">
+        <label>Country of employment (where your contract is registered)</label>
+        <select id="country" onchange="onCountryChange()">
+          <option value="US">United States</option>
+          <option value="UK">United Kingdom</option>
+          <option value="DE">Germany</option>
+          <option value="AU">Australia</option>
+          <option value="SG">Singapore</option>
+          <option value="TH">Thailand</option>
+          <option value="NP">Nepal</option>
+          <option value="IN">India</option>
+          <option value="BR">Brazil</option>
+          <option value="JP">Japan</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Annual gross salary (in local employment currency)</label>
+        <div class="sym-wrap"><span class="sym" id="sym1">$</span><input type="number" id="gross" value="65000" oninput="recalc()"></div>
+        <div class="salary-hint" id="salary-hint"></div>
+      </div>
+      <div class="field">
+        <label>Bonus / additional pay (annual)</label>
+        <div class="sym-wrap"><span class="sym" id="sym2">$</span><input type="number" id="bonus" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label>Pay frequency</label>
+        <select id="payfreq" onchange="recalc()">
+          <option value="12">Monthly</option>
+          <option value="26">Bi-weekly</option>
+          <option value="52">Weekly</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Employment type</label>
+        <select><option>EOR Employee</option></select>
+      </div>
+      <div id="country-note" class="info-box"></div>
+    </div>
+  </div>
+  <div class="grid4" id="salary-metrics"></div>
+</div>
+
+<!-- PAYSLIP -->
+<div class="tab" id="tab-payslip">
+  <div class="stitle">Monthly payslip</div>
+  <div class="card" id="payslip-card"></div>
+</div>
+
+<!-- EXPENSES -->
+<div class="tab" id="tab-expenses">
+  <div class="stitle">Monthly expenses</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="field"><label>Description</label><input type="text" id="exp-desc" placeholder="e.g. Rent, groceries, Netflix..."></div>
+      <div class="field"><label>Amount</label><div class="sym-wrap"><span class="sym" id="exp-sym">$</span><input type="number" id="exp-amt" placeholder="0"></div></div>
+      <div class="field">
+        <label>Category</label>
+        <select id="exp-cat">
+          <option value="needs">Needs (rent, food, utilities)</option>
+          <option value="wants">Wants (dining, entertainment)</option>
+          <option value="savings">Savings (emergency fund)</option>
+          <option value="investment">Investment (stocks, pension top-up)</option>
+          <option value="work">Work expense (reimbursable)</option>
+        </select>
+      </div>
+      <button class="act-btn" onclick="addExpense()">+ Add expense</button>
+    </div>
+    <div>
+      <div class="stitle">This month</div>
+      <div id="exp-list"><div style="font-size:12px;color:var(--muted);padding:8px 0">No expenses added yet.</div></div>
+      <div id="exp-summary"></div>
+    </div>
+  </div>
+</div>
+
+<!-- REIMBURSEMENTS — ACT II -->
+<div class="tab" id="tab-reimbursements">
+
+  <!-- ACT II BREACH PANEL -->
+  <div id="breach-panel" class="breach-panel">
+    <div class="breach-header">
+      <span class="breach-icon">🚨</span>
+      <div>
+        <div class="breach-title">Act II — Operational friction point detected</div>
+        <div class="breach-sub">Reimbursement has breached the 14-day compliance window. Exception tickets auto-generated and routed to operations.</div>
+      </div>
+    </div>
+    <div class="breach-tickets">
+      <div class="breach-metric"><span class="bm-n" id="breach-count">0</span><span class="bm-l">Exceptions raised</span></div>
+      <div class="breach-metric"><span class="bm-n" id="breach-impact">$0</span><span class="bm-l">Total impact</span></div>
+      <div class="breach-metric"><span class="bm-n">2 days</span><span class="bm-l">SLA assigned</span></div>
+    </div>
+    <div class="breach-ticket-list" id="breach-ticket-list"></div>
+    <button class="view-dashboard-btn" onclick="goToAct3()">
+      🖥️ Act III — View exception dashboard →
+    </button>
+  </div>
+
+  <div id="reimb-alerts"></div>
+  <div class="stitle">Submit reimbursement claim</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="field"><label>Description</label><input type="text" id="reimb-desc" placeholder="e.g. Team lunch, client travel..."></div>
+      <div class="field"><label>Amount</label><div class="sym-wrap"><span class="sym" id="reimb-sym">$</span><input type="number" id="reimb-amt" placeholder="0"></div></div>
+      <div class="field"><label>Submission date</label><input type="date" id="reimb-date"></div>
+      <div class="field">
+        <label>Type</label>
+        <select id="reimb-type">
+          <option value="travel">Travel</option>
+          <option value="meals">Meals & entertainment</option>
+          <option value="equipment">Equipment</option>
+          <option value="accommodation">Accommodation</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button class="act-btn" onclick="addReimb()">Submit claim</button>
+      <div style="margin-top:8px;padding:8px 10px;background:var(--amber-light);border-radius:6px;font-size:11px;color:var(--amber);line-height:1.5">
+        💡 <strong>Try Act II:</strong> Set the submission date to 15+ days ago and submit. Watch the system flag it as a compliance breach and generate exception tickets automatically.
+      </div>
+    </div>
+    <div>
+      <div class="stitle">Submitted claims</div>
+      <div id="reimb-list"><div style="font-size:12px;color:var(--muted);padding:8px 0">No claims submitted yet.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="tab" id="tab-summary">
+  <div class="stitle">Monthly summary</div>
+  <div id="summary-content"></div>
+</div>
+
+<script>
+const RULES={
+  US:{name:'United States',sym:'$',currency:'USD',tax:0.22,social:0.0765,pension:0.06,taxLabel:'Federal income tax',socialLabel:'FICA (SS + Medicare)',pensionLabel:'401(k) contribution',note:'Federal income tax 22% + Social Security 6.2% + Medicare 1.45% + 401(k) 6%',defaultSalary:65000,hint:'💡 Typical range: $45,000 – $90,000 USD annually'},
+  UK:{name:'United Kingdom',sym:'£',currency:'GBP',tax:0.20,social:0.12,pension:0.05,taxLabel:'Income tax (basic rate)',socialLabel:'National Insurance',pensionLabel:'Auto-enrolment pension',note:'Income tax 20% + National Insurance 12% + auto-enrolment pension 5%',defaultSalary:35000,hint:'💡 Typical range: £25,000 – £55,000 GBP annually'},
+  DE:{name:'Germany',sym:'€',currency:'EUR',tax:0.25,social:0.092,pension:0.093,taxLabel:'Income tax',socialLabel:'Health & care insurance',pensionLabel:'Rentenversicherung',note:'Income tax ~25% + health/care insurance 9.2% + pension 9.3%',defaultSalary:50000,hint:'💡 Typical range: €35,000 – €70,000 EUR annually'},
+  AU:{name:'Australia',sym:'A$',currency:'AUD',tax:0.325,social:0.02,pension:0.11,taxLabel:'Income tax',socialLabel:'Medicare levy',pensionLabel:'Superannuation (employer ref)',note:'Income tax 32.5% + Medicare levy 2% + Superannuation 11% employer-paid',defaultSalary:75000,hint:'💡 Typical range: A$55,000 – A$100,000 AUD annually'},
+  SG:{name:'Singapore',sym:'S$',currency:'SGD',tax:0.115,social:0.20,pension:0,taxLabel:'Personal income tax',socialLabel:'CPF contribution',pensionLabel:'',note:'Personal income tax ~11.5% + CPF employee contribution 20%',defaultSalary:60000,hint:'💡 Typical range: S$45,000 – S$90,000 SGD annually'},
+  TH:{name:'Thailand',sym:'฿',currency:'THB',tax:0.20,social:0.05,pension:0,taxLabel:'Personal income tax',socialLabel:'Social Security Fund',pensionLabel:'',note:'Personal income tax ~20% + Social Security Fund 5%. Social Security capped at 750 THB/month.',defaultSalary:900000,hint:'💡 Typical range: ฿600,000 – ฿1,200,000 THB annually'},
+  NP:{name:'Nepal',sym:'Rs',currency:'NPR',tax:0.15,social:0.10,pension:0,taxLabel:'Income tax',socialLabel:'Social Security Fund',pensionLabel:'',note:'Income tax 15% + Social Security Fund 10%.',defaultSalary:900000,hint:'💡 Typical range: Rs 600,000 – Rs 1,200,000 NPR annually'},
+  IN:{name:'India',sym:'₹',currency:'INR',tax:0.20,social:0.12,pension:0,taxLabel:'Income tax',socialLabel:'Provident Fund (PF)',pensionLabel:'',note:'Income tax ~20% + Employee Provident Fund 12%',defaultSalary:800000,hint:'💡 Typical range: ₹500,000 – ₹1,500,000 INR annually'},
+  BR:{name:'Brazil',sym:'R$',currency:'BRL',tax:0.275,social:0.09,pension:0,taxLabel:'IRPF (income tax)',socialLabel:'INSS (social security)',pensionLabel:'',note:'Income tax IRPF 27.5% + Social Security INSS 9%',defaultSalary:60000,hint:'💡 Typical range: R$40,000 – R$90,000 BRL annually'},
+  JP:{name:'Japan',sym:'¥',currency:'JPY',tax:0.20,social:0.095,pension:0.091,taxLabel:'Income tax',socialLabel:'Health insurance',pensionLabel:'Kosei Nenkin (pension)',note:'Income tax ~20% + health insurance 9.5% + pension 9.1%',defaultSalary:5000000,hint:'💡 Typical range: ¥3,500,000 – ¥8,000,000 JPY annually'}
+};
+
+const CAT_COLORS={needs:'#378ADD',wants:'#EF9F27',savings:'#1D9E75',investment:'#534AB7',work:'#D85A30'};
+const CAT_LABELS={needs:'Needs',wants:'Wants',savings:'Savings',investment:'Investment',work:'Work expense'};
+let expenses=[],reimbursements=[],C={};
+let ticketCounter=1092;
+
+function getRule(){return RULES[document.getElementById('country').value]||RULES.US}
+function fmt(n){const r=getRule();return r.sym+Math.round(Math.abs(n)).toLocaleString()}
+function fmtUSD(n){return '$'+Math.round(Math.abs(n)).toLocaleString()}
+
+function syncCurrency(){
+  const r=getRule();
+  ['sym1','sym2','exp-sym','reimb-sym'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=r.sym});
+}
+
+function onCountryChange(){
+  const r=getRule();
+  syncCurrency();
+  document.getElementById('gross').value=r.defaultSalary;
+  document.getElementById('salary-hint').textContent=r.hint;
+  const b=document.getElementById('country-banner');
+  b.textContent=`Country changed to ${r.name}. Salary updated to ${r.sym}${r.defaultSalary.toLocaleString()} ${r.currency} — a typical local professional salary. Adjust as needed.`;
+  b.style.display='block';
+  setTimeout(()=>b.style.display='none',5000);
+  recalc();
+}
+
+function recalc(){
+  const r=getRule();
+  const gross=parseFloat(document.getElementById('gross').value)||0;
+  const bonus=parseFloat(document.getElementById('bonus').value)||0;
+  const freq=parseInt(document.getElementById('payfreq').value)||12;
+  const total=gross+bonus;
+  const taxAmt=total*r.tax,socialAmt=total*r.social,pensionAmt=total*r.pension;
+  const netAnnual=total-taxAmt-socialAmt-pensionAmt;
+  const pGross=total/freq,pTax=taxAmt/freq,pSocial=socialAmt/freq,pPension=pensionAmt/freq,pNet=netAnnual/freq;
+  C={gross,bonus,total,pGross,pTax,pSocial,pPension,pNet,pBase:gross/freq,pBonus:bonus/freq,r,freq};
+  const fl={12:'month',26:'fortnight',52:'week'}[freq];
+  const takeRate=total>0?Math.round(netAnnual/total*100):0;
+  document.getElementById('country-note').textContent=r.note;
+  document.getElementById('salary-metrics').innerHTML=`
+    <div class="metric"><span class="n n-blue">${fmt(pGross)}</span><span class="l">Gross per ${fl}</span></div>
+    <div class="metric"><span class="n n-red">${fmt(pTax+pSocial+pPension)}</span><span class="l">Deductions</span></div>
+    <div class="metric"><span class="n n-green">${fmt(pNet)}</span><span class="l">Net take-home</span></div>
+    <div class="metric"><span class="n n-amber">${takeRate}%</span><span class="l">Take-home rate</span></div>`;
+  renderPayslip();renderSummary();
+}
+
+function renderPayslip(){
+  if(!C.r)return;
+  const{r,pGross,pTax,pSocial,pPension,pNet,pBase,pBonus,freq,bonus}=C;
+  const fl={12:'Monthly',26:'Bi-weekly',52:'Weekly'}[freq];
+  document.getElementById('payslip-card').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div><div style="font-size:14px;font-weight:500">${r.name} payslip</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${fl} · EOR Employee · ${r.currency}</div></div>
+      <span class="badge b-blue">${r.currency}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="ps-row"><span style="color:var(--muted)">Base salary</span><span>${fmt(pBase)}</span></div>
+    ${bonus>0?`<div class="ps-row"><span style="color:var(--muted)">Bonus</span><span>${fmt(pBonus)}</span></div>`:''}
+    <div class="ps-row subtotal"><span>Gross earnings</span><span>${fmt(pGross)}</span></div>
+    <div class="ps-row ded"><span>${r.taxLabel}</span><span>- ${fmt(pTax)}</span></div>
+    ${pSocial>0?`<div class="ps-row ded"><span>${r.socialLabel}</span><span>- ${fmt(pSocial)}</span></div>`:''}
+    ${pPension>0?`<div class="ps-row ded"><span>${r.pensionLabel}</span><span>- ${fmt(pPension)}</span></div>`:''}
+    <div class="ps-row net"><span>Net take-home pay</span><span>${fmt(pNet)}</span></div>
+    <div class="info-box" style="margin-top:10px">${r.note}</div>
+    <div style="margin-top:10px;padding:10px 12px;background:var(--purple-light);border:0.5px solid #AFA9EC;border-radius:8px;font-size:11px;color:var(--purple);line-height:1.6">
+      <strong>EOR note:</strong> This payslip reflects deductions for <strong>${r.name}</strong> — the country where your employment contract is registered. Physical location may differ.
+    </div>`;
+}
+
+function addExpense(){
+  const desc=document.getElementById('exp-desc').value.trim();
+  const amt=parseFloat(document.getElementById('exp-amt').value)||0;
+  const cat=document.getElementById('exp-cat').value;
+  if(!desc||!amt)return;
+  expenses.push({id:Date.now(),desc,amt,cat});
+  document.getElementById('exp-desc').value='';
+  document.getElementById('exp-amt').value='';
+  if(cat==='work'){document.getElementById('reimb-desc').value=desc;document.getElementById('reimb-amt').value=amt;}
+  renderExpenses();renderSummary();
+}
+
+function removeExpense(id){expenses=expenses.filter(e=>e.id!==id);renderExpenses();renderSummary();}
+
+function renderExpenses(){
+  const list=document.getElementById('exp-list'),sumEl=document.getElementById('exp-summary');
+  if(!expenses.length){list.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px 0">No expenses added yet.</div>';sumEl.innerHTML='';return;}
+  list.innerHTML=expenses.map(e=>`
+    <div class="exp-item">
+      <span class="dot" style="background:${CAT_COLORS[e.cat]}"></span>
+      <span class="exp-desc">${e.desc}</span>
+      <span class="badge" style="background:${CAT_COLORS[e.cat]}22;color:${CAT_COLORS[e.cat]};font-size:10px">${CAT_LABELS[e.cat]}</span>
+      <span class="exp-amt">${fmt(e.amt)}</span>
+      <button class="del-btn" onclick="removeExpense(${e.id})">×</button>
+    </div>`).join('');
+  const totals={};expenses.forEach(e=>totals[e.cat]=(totals[e.cat]||0)+e.amt);
+  const total=Object.values(totals).reduce((a,b)=>a+b,0);
+  sumEl.innerHTML=`<div class="card" style="margin-top:8px"><div class="stitle" style="margin-bottom:8px">Breakdown</div>
+    ${Object.entries(totals).map(([cat,amt])=>`
+      <div class="bar-wrap">
+        <div class="bar-label"><span style="display:flex;align-items:center;gap:5px"><span class="dot" style="background:${CAT_COLORS[cat]}"></span>${CAT_LABELS[cat]}</span><span>${fmt(amt)} · ${Math.round(amt/total*100)}%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(amt/total*100)}%;background:${CAT_COLORS[cat]}"></div></div>
+      </div>`).join('')}
+    <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border2)"><span>Total</span><span>${fmt(total)}</span></div>
+  </div>`;
+}
+
+function addReimb(){
+  const desc=document.getElementById('reimb-desc').value.trim();
+  const amt=parseFloat(document.getElementById('reimb-amt').value)||0;
+  const date=document.getElementById('reimb-date').value;
+  const type=document.getElementById('reimb-type').value;
+  if(!desc||!amt||!date)return;
+  ticketCounter++;
+  reimbursements.push({id:Date.now(),ticketId:'TK-'+ticketCounter,desc,amt,date,type,status:'pending'});
+  document.getElementById('reimb-desc').value='';
+  document.getElementById('reimb-amt').value='';
+  renderReimb();
+  renderSummary();
+}
+
+function renderReimb(){
+  const list=document.getElementById('reimb-list');
+  const alerts=document.getElementById('reimb-alerts');
+  const panel=document.getElementById('breach-panel');
+  const today=new Date();
+  const POLICY=14;
+  const overdue=reimbursements.filter(r=>(today-new Date(r.date))/86400000>POLICY&&r.status==='pending');
+  const onTrack=reimbursements.filter(r=>(today-new Date(r.date))/86400000<=POLICY&&r.status==='pending');
+
+  // Update Act II nav indicator
+  const navBtn=document.getElementById('reimb-nav-btn');
+  if(overdue.length){
+    navBtn.style.color='var(--red)';
+    navBtn.textContent='Reimbursements 🚨';
+  } else {
+    navBtn.style.color='';
+    navBtn.textContent='Reimbursements';
+  }
+
+  // Show/hide breach panel
+  if(overdue.length){
+    panel.classList.add('visible');
+    document.getElementById('act2').classList.add('current');
+    const totalImpact=overdue.reduce((s,r)=>s+r.amt,0);
+    document.getElementById('breach-count').textContent=overdue.length;
+    document.getElementById('breach-impact').textContent=fmt(totalImpact);
+    document.getElementById('breach-ticket-list').innerHTML=overdue.map(r=>`
+      <div class="breach-ticket">
+        <span class="bt-id">#${r.ticketId}</span>
+        <span class="bt-desc">${r.desc} — ${r.type}</span>
+        <span class="bt-sla">SLA BREACH</span>
+      </div>`).join('');
+    alerts.innerHTML='';
+  } else {
+    panel.classList.remove('visible');
+    if(onTrack.length){alerts.innerHTML=`<div class="alert alert-green">All reimbursements within the 14-day policy window.</div>`;}
+    else alerts.innerHTML='';
+  }
+
+  if(!reimbursements.length){list.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px 0">No claims submitted yet.</div>';return;}
+  list.innerHTML=reimbursements.map(r=>{
+    const days=Math.round((today-new Date(r.date))/86400000),isOver=days>POLICY;
+    return`<div class="reimb-item">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <div><span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-right:6px">#${r.ticketId}</span><span style="font-size:13px;font-weight:500">${r.desc}</span></div>
+        <span style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace">${fmt(r.amt)}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:5px">${r.type} · submitted ${days} day${days!==1?'s':''} ago</div>
+      ${isOver?`<span class="badge b-red" style="animation:pulse 1.2s ease-in-out infinite">Overdue — exception ticket generated</span>`:`<span class="badge b-amber">Pending · ${POLICY-days} day${POLICY-days!==1?'s':''} remaining</span>`}
+    </div>`;}).join('');
+}
+
+function goToAct3(){
+  document.getElementById('act3').classList.add('current');
+  window.open('index.html','_blank');
+}
+
+function renderSummary(){
+  if(!C.pNet)return;
+  const netM=C.pNet,totalExp=expenses.reduce((s,e)=>s+e.amt,0);
+  const pendingReimb=reimbursements.filter(r=>r.status==='pending').reduce((s,r)=>s+r.amt,0);
+  const remaining=netM-totalExp;
+  const savingsAmt=expenses.filter(e=>e.cat==='savings'||e.cat==='investment').reduce((s,e)=>s+e.amt,0);
+  const savingsRate=netM>0?Math.round(savingsAmt/netM*100):0;
+  const needs=expenses.filter(e=>e.cat==='needs').reduce((s,e)=>s+e.amt,0);
+  const wants=expenses.filter(e=>e.cat==='wants').reduce((s,e)=>s+e.amt,0);
+  const today=new Date();
+  const overdueCount=reimbursements.filter(r=>(today-new Date(r.date))/86400000>14&&r.status==='pending').length;
+  document.getElementById('summary-content').innerHTML=`
+    <div class="grid4" style="margin-bottom:12px">
+      <div class="metric"><span class="n n-green">${fmt(netM)}</span><span class="l">Net take-home</span></div>
+      <div class="metric"><span class="n n-red">${fmt(totalExp)}</span><span class="l">Total expenses</span></div>
+      <div class="metric"><span class="n ${remaining>=0?'n-green':'n-red'}">${fmt(Math.abs(remaining))}</span><span class="l">${remaining>=0?'Remaining':'Overspent'}</span></div>
+      <div class="metric"><span class="n n-blue">${savingsRate}%</span><span class="l">Savings rate</span></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="stitle" style="margin-bottom:10px">Budget allocation</div>
+        ${netM>0?[['Needs',needs,'#378ADD'],['Wants',wants,'#EF9F27'],['Savings & investment',savingsAmt,'#1D9E75']].map(([l,v,c])=>`
+          <div class="bar-wrap">
+            <div class="bar-label"><span>${l}</span><span>${fmt(v)} · ${Math.round(v/netM*100)}%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100,Math.round(v/netM*100))}%;background:${c}"></div></div>
+          </div>`).join(''):'<div style="font-size:12px;color:var(--muted)">Add expenses to see allocation.</div>'}
+        <div class="info-box">Healthy budget: 50% needs · 30% wants · 20% savings</div>
+      </div>
+      <div class="card">
+        <div class="stitle" style="margin-bottom:10px">Financial snapshot</div>
+        <div class="ps-row"><span style="color:var(--muted)">Gross pay</span><span>${fmt(C.pGross)}</span></div>
+        <div class="ps-row ded"><span>Total deductions</span><span>- ${fmt(C.pTax+C.pSocial+C.pPension)}</span></div>
+        <div class="ps-row net"><span>Net take-home</span><span>${fmt(netM)}</span></div>
+        <div class="divider"></div>
+        <div class="ps-row"><span style="color:var(--muted)">Total expenses</span><span>- ${fmt(totalExp)}</span></div>
+        <div class="ps-row"><span style="color:var(--muted)">Pending reimbursements</span><span>${fmt(pendingReimb)}</span></div>
+        <div class="ps-row" style="font-weight:500"><span>Balance remaining</span><span style="color:${remaining>=0?'var(--green)':'var(--red)'}">${fmt(Math.abs(remaining))}</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:0.5px solid var(--border2)">
+          <span style="font-size:12px;color:var(--muted)">Savings health</span>
+          <span class="badge ${savingsRate>=20?'b-green':'b-amber'}">${savingsRate>=20?'✅ On track':'⚠️ Needs attention'}</span>
+        </div>
+      </div>
+    </div>
+    ${overdueCount>0?`
+    <div class="alert alert-red" style="margin-top:10px">
+      <strong>⚡ Act II triggered</strong> — ${overdueCount} reimbursement${overdueCount>1?'s':''} overdue. Exception ticket${overdueCount>1?'s':''} generated and escalated to the operations dashboard.
+      <div style="margin-top:6px"><button onclick="showTab('reimbursements',null);document.querySelectorAll('.nav-btn')[3].classList.add('active');document.querySelectorAll('.nav-btn').forEach((b,i)=>{if(i!==3)b.classList.remove('active')})" style="font-size:11px;padding:4px 10px;border:0.5px solid var(--red);border-radius:4px;background:transparent;color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif">View exceptions →</button></div>
+    </div>`:''}`;
+}
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='payslip')renderPayslip();
+  if(id==='summary')renderSummary();
+}
+
+// Init
+document.getElementById('reimb-date').value=new Date().toISOString().split('T')[0];
+document.getElementById('salary-hint').textContent=getRule().hint;
+syncCurrency();
+recalc();
+renderExpenses();
+renderReimb();
+</script>
+</body>
+</html>
