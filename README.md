@@ -35,8 +35,8 @@ resolved.
 
 | Asset | Link |
 |-------|------|
-| 🌐 Full Portfolio Hub | [Open Notion Page](YOUR NOTION LINK) |
-| 🎭 Global Payroll Simulator | [Open Simulator](https://ashmapoudel.github.io/global-workforce-operations-hub) |
+| 🌐 Full Portfolio Hub | [Open Notion Page](https://app.notion.com/p/Global-Workforce-Operations-Hub-37049d700566802aa893f03a096a4687?source=copy_link) |
+| 🎭 Global Payroll Simulator | [Open Simulator](https://ashmapoudel.github.io/global-workforce-operations-hub/) |
 | 🖥️ Exception Dashboard | [Open Dashboard](https://ashmapoudel.github.io/global-workforce-operations-hub/dashboard.html) |
 | 📊 Live Command Center | [Open Looker Studio](https://datastudio.google.com/reporting/d6774274-3f24-4161-9839-1fa755a2fed4/page/LdXyF) |
 | 🎯 React Dashboard | [Open Artifact](https://claude.ai/public/artifacts/97496e38-412e-4d77-bf99-1d80da0c133e) |
