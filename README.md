@@ -1,96 +1,143 @@
-# Global Workforce Operations Hub: End-to-End Payroll & Exception Architecture
+# Global Workforce Operations Hub 🌐
 
-An interconnected operational ecosystem designed to model cross-border employment, automate compliance auditing, and streamline multi-country payroll issue resolution. 
+An end-to-end operational portfolio demonstrating AI-assisted 
+global payroll management, cross-border EOR compliance, and 
+enterprise onboarding implementation.
 
-This repository demonstrates advanced system design, automated AI compliance pipelines, and live data visualization tailored for scale at global EOR and workforce management platforms.
-
----
-
-## Live System Infrastructure
-
-| Asset | Platform/Stack | Live Access |
-|-------|----------------|-------------|
-| 🎯 Functional Payroll Engine | React + Recharts | [Open Interactive Sandbox](https://claude.ai/public/artifacts/97496e38-412e-4d77-bf99-1d80da0c133e) |
-| 📊 Operations Command Center | Looker Studio | [Open Live Dashboard](https://datastudio.google.com/reporting/d6774274-3f24-4161-9839-1fa755a2fed4/page/LdXyF) |
-| 🌐 Master Architecture Hub | Notion | [Open Global Operations Hub](https://app.notion.com/p/Global-Workforce-Operations-Hub-37049d700566802aa893f03a096a4687) |
-| 💻 Deployed Codebase | Netlify + GitHub | [Open Live Project Site](https://global-workforce-operations-hub.netlify.app/) |
+Built by a remote operations professional targeting Onboarding 
+Implementation, Compliance Operations, and Product Operations 
+roles at global SaaS companies.
 
 ---
 
-## The Operational Architecture (How It Connects)
+## 🎭 The Three-Act Portfolio Story
 
-Unlike isolated portfolio pieces, this repository connects an **Employee-Facing Layer** directly to an **Operations-Facing Layer** to close the feedback loop on payroll administration:
+**Act I — The Employee Frontend**
+The Global Payroll Simulator lets anyone enter their salary, 
+select their employment country, see live statutory deductions 
+applied in local currency, track monthly expenses, and submit 
+work reimbursements.
 
-1. **The Sandbox (Project 2):** Employees input their country, gross salary, and recurring expenses. The calculations layer processes local tax structures, enforces statutory ceilings (e.g., Thailand’s 750 THB social security cap), and routes corporate expense claims into a 14-day reimbursement pipeline.
-2. **The Automation Layer (AI Detective):** Expense submissions undergo automated parsing to flag cross-border compliance violations (e.g., missing receipts under UK HMRC or missing business contexts under Thai Revenue Department guidelines).
-3. **The Exception Desk (Project 1):** If a reimbursement remains processing past the 14-day SLA window, the backend dynamically instantiates an emergency exception ticket, categorizes its priority, assigns a dedicated internal owner, and updates the management command center in real time.
-[Employee Submission] ──> [Expense Tracking] ──> [AI Compliance Check]
-│
-[Live Looker Dashboard] <── [SLA Triage Desk] <── [Overdue Exception Flag]
----
+**Act II — The Friction Point**
+When a reimbursement is not processed within 14 days, the system 
+flags it as a compliance breach and generates an exception ticket 
+automatically.
 
-## System Component Breakdown
-
-### 1. Global Payroll & Expense Simulator (Project 2)
-*   **Multi-Jurisdiction Logic:** Built-in calculation matrices for 10 distinct countries, managing dynamically adjusted localized income tax bands and statutory pension boundaries.
-*   **Financial Health Engine:** Real-time personal cash-flow optimizer routing net disposable income automatically into structured portfolios (30% savings floor, 70% automated wealth allocations) with dynamic safety warnings.
-
-### 2. AI Compliance Agent (The Payroll Detective)
-*   **Automated Auditing:** Leverages tailored prompt architecture to cross-examine text-based reimbursement logs against local EOR labor laws.
-*   **Risk Categorization:** Outputs structured risk tables marking violations as Low, Medium, or High, while dictating the precise manual override required by an operations manager.
-
-### 3. Payroll Exception Management Desk (Project 1)
-*   **Automated Triage:** Replaces high-friction manual email sorting with algorithmic classification of issue severity, core categories, and region-based routing.
-*   **SLA Governance:** Governs internal back-office infrastructure with tight resolution deadlines ranging from a strict 4-hour critical turnaround to routine weekly audits.
+**Act III — The Resolution Core**
+The exception enters the Payroll Exception Management System, gets 
+classified by severity, assigned an SLA target, routed to the 
+correct owner, and tracked on a live operations dashboard until 
+resolved.
 
 ---
 
-## Service Level Agreement (SLA) Priority Matrix
+## 🔗 Live Portfolio
 
-| Severity | Target System Event | SLA Clock | Assigned Target Owner | Breach Escalation Protocol |
-| :--- | :--- | :--- | :--- | :--- |
-| 🔴 **Critical** | Missing/Delayed Core Salary | 4 Hours | Sr. Payroll Analyst | Immediate SLA breach; Ops Lead automated ping |
-| 🟠 **High** | Inaccurate Statutory Tax Deduction | 1 Business Day | Payroll Analyst | Trigger alert if unassigned within 2 hours |
-| 🟡 **Medium** | Overdue Reimbursement Cycle (>14 days) | 2 Business Days | Payroll Analyst | Automated warning at 80% of SLA window |
-| 🟢 **Low** | Historical Payslip Clarification | 3 Business Days | Support Specialist | Batch processing during weekly operational reviews |
-
----
-
-## Live Core Metrics Tracked
-
-| Operational Metric | Live Architecture Baseline |
-| :--- | :--- |
-| **Monitored Ticket Volume** | 51 Live Cases across 12 EOR Target Regions |
-| **System Financial Impact** | $90,652 in tracked capital allocation |
-| **SLA Exceptions Caught** | 3 Breaches flagged with active escalation triggers |
-| **Resolution Velocity** | Modelled to drive a 68% drop in resolution times |
-| **Target SLA Maintenance** | Balanced at an enterprise benchmark of 92% |
-| **Manual Operational Triage** | Reduced to 0% via frontend automated categorization |
+| Asset | Link |
+|-------|------|
+| 🌐 Full Portfolio Hub | [Open Notion Page](YOUR NOTION LINK) |
+| 🎭 Global Payroll Simulator | [Open Simulator](https://ashmapoudel.github.io/global-workforce-operations-hub) |
+| 🖥️ Exception Dashboard | [Open Dashboard](https://ashmapoudel.github.io/global-workforce-operations-hub/dashboard.html) |
+| 📊 Live Command Center | [Open Looker Studio](https://datastudio.google.com/reporting/d6774274-3f24-4161-9839-1fa755a2fed4/page/LdXyF) |
+| 🎯 React Dashboard | [Open Artifact](https://claude.ai/public/artifacts/97496e38-412e-4d77-bf99-1d80da0c133e) |
+| 📋 Google Sheets Sandbox | [Open Sheet](https://docs.google.com/spreadsheets/d/1BaxNAx-YTVfHZz5vlF1ZkBpylvBMcR1t4t2TeX5uiYA/edit) |
 
 ---
 
-## Engineering & Operations Stack
+## 📁 Project 1 — Payroll Exception Management System
 
-| Core Tool | System Function |
-| :--- | :--- |
-| **React + Recharts** | Frontend analytical client, handling multi-variable UI rendering and filtering |
-| **Google Sheets** | Relational calculation engine, storing core statutory rates and tax data matrices |
-| **Looker Studio** | Live business intelligence dashboard, continuously piping data from the core ledger |
-| **Whimsical** | Structural blueprint engine mapping automated vs. human-in-the-loop logic gates |
-| **Claude AI** | LLM core parsing free-text support tickets and executing rule-based validation scripts |
+A structured operational framework replacing manual email-based 
+payroll issue resolution with AI-assisted ticket classification, 
+SLA-governed routing, and a live operations dashboard.
+
+**Key results:**
+- 51 tickets tracked across 5 categories and 12 regions
+- 3 SLA breaches identified and flagged automatically
+- $90,652 total financial impact tracked
+- AI classification replaces manual triage entirely
+- Live dashboard updates automatically from Google Sheets
+
+**Files:**
+- `dashboard.html` — Exception management portfolio page
+- `payroll_exceptions_data.xlsx` — 51-row dataset
+- `payroll_exceptions_raw.csv` — Raw data for import
+- `AI_Classified_Ticket_TK1092.pdf` — Sample AI classified ticket
+- `Payroll_Exception_Management_FlowChart.png` — Whimsical flowchart
 
 ---
 
-## Directory Schema
+## 📁 Project 2 — Global Payroll & Expense Simulator
 
-```text
-payroll-exception-management/
-├── index.html                           # Main web entry application
-├── dashboard.jsx                        # React analytics engine for exception management (Project 1)
-├── payroll-simulator.jsx                # Core state engine for cross-border salary simulator (Project 2)
-├── simulator.jsx                        # React rendering logic for interactive client sandbox
-├── payroll_exceptions_data.xlsx         # Consolidated EOR database and historical records
-├── payroll_exceptions_raw.csv           # Unstructured incoming employee ticket simulation
-├── AI_Classified_Ticket_TK1092.pdf      # Proof-of-concept automated ticket triage artifact
-├── Payroll_Exception_Management_Flow.png # Full Whimsical operational infrastructure layout
-└── Payroll_Exception_Management_Looker.pdf # Visual reference of active business intelligence system
+An interactive multi-country gross-to-net payroll calculator 
+combined with an automated expense router and reimbursement 
+pipeline. Supports 10 countries with live statutory deductions 
+applied in local currency.
+
+**Key features:**
+- 10 countries with country-appropriate default salaries
+- Live currency symbols and correct statutory rates per country
+- Expense categorisation into Needs, Wants, Savings, Investment
+- Reimbursement pipeline with 14-day compliance window
+- Automatic exception flagging that connects to Project 1
+- Live GOOGLEFINANCE currency conversion to USD
+
+**Files:**
+- `index.html` — Global Payroll Simulator (main page)
+- `global_workforce_sandbox.xlsx` — Google Sheets calculation engine
+- `simulator.jsx` — React component version
+
+---
+
+## 🤖 AI Compliance Agent
+
+Demonstrates prompt engineering applied to a real operational 
+problem — automated expense auditing across multiple countries 
+using AI to flag compliance risks without manual review.
+
+---
+
+## 🗓️ 30-Day EOR Onboarding Blueprint
+
+Simulates the end-to-end operational plan for migrating 50 workers 
+across Thailand, Nepal, and the UK. Documents country-specific 
+compliance requirements, document collection workflows, and 
+escalation procedures.
+
+---
+
+## 🛠️ Tools and Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| React + Recharts | Interactive dashboard with filters and charts |
+| Google Sheets | Live calculation engine and compliance matrix |
+| Looker Studio | Connected dashboard updating from Google Sheets |
+| Whimsical | System design flowchart |
+| Claude AI | Ticket classification and compliance auditing |
+| GitHub + GitHub Pages | Version control and public hosting |
+| Notion | Master portfolio hub |
+
+---
+
+## 🔄 How the Two Projects Connect
+
+Employee submits expense in Simulator (Project 2)
+↓
+Reimbursement enters 14-day compliance window
+↓
+If unprocessed after 14 days → Exception ticket generated
+↓
+AI classifies severity and category
+↓
+Owner assigned with SLA clock (Project 1)
+↓
+Operations team resolves via Exception Dashboard
+↓
+Resolution logged → Live dashboard updates
+
+---
+
+*Built as an independent portfolio project. All systems are live 
+and interactive. All data is simulated for demonstration purposes. 
+Relevant to roles in Operations, Implementation, Customer Success, 
+and Product Operations at global workforce platforms.*
