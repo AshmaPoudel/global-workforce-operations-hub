@@ -33,6 +33,10 @@ resolved.
 
 ## 🔗 Live Portfolio
 
+🎬 **Video Walkthrough:**
+[![Watch the 3-Act Systems Demo](https://img.youtube.com/vi/652033004/maxresdefault.jpg)](https://www.loom.com/share/56416663e8d44395b23dcb53df9bd97b)
+*Click the image above to watch the full 90-second system operational lifecycle.*
+
 | Asset | Link |
 |-------|------|
 | 🌐 Full Portfolio Hub | [Open Notion Page](https://app.notion.com/p/Global-Workforce-Operations-Hub-37049d700566802aa893f03a096a4687?source=copy_link) |
